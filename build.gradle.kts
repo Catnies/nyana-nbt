@@ -3,9 +3,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "net.nyana"
-version = "1.0.0"
-
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
@@ -15,22 +12,26 @@ java {
     withSourcesJar()
 }
 
-repositories {
-    mavenCentral()
-    maven("https://libraries.minecraft.net/")
-}
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
-dependencies {
-    implementation("org.jetbrains:annotations:24.0.0")
-    implementation("com.mojang:datafixerupper:8.0.16")
+    group = "net.nyana"
+    version = "1.0.0"
 
-    testImplementation(platform("org.junit:junit-bom:6.0.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
+    repositories {
+        mavenCentral()
+    }
 
-tasks {
-    test {
+    dependencies {
+        compileOnly("org.jetbrains:annotations:24.0.0")
+
+        testImplementation(platform("org.junit:junit-bom:6.0.0"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    }
+
+    tasks.named<Test>("test") {
         useJUnitPlatform()
     }
 }
