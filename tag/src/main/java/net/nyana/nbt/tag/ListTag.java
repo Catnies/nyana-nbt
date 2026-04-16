@@ -1,6 +1,7 @@
 package net.nyana.nbt.tag;
 
-import net.nyana.nbt.tag.visitor.TagVisitor;
+import net.nyana.nbt.tag.visitor.TagVisitor;import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class ListTag extends CollectionTag<Tag> {
     private static final int SELF_SIZE_IN_BYTES = 36;
     private final List<Tag> list;
 
-    public ListTag(List<Tag> list) {
+    public ListTag(@NotNull List<Tag> list) {
         this.list = list;
     }
 
@@ -31,9 +32,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @param tag 需要尝试解包的 CompoundTag.
      * @return 解包后的底层 Tag; 如果该对象并不是一个包裹器, 则直接返回原 CompoundTag.
      */
-    public static Tag tryUnwrap(CompoundTag tag) {
+    public static @NotNull Tag tryUnwrap(@NotNull CompoundTag tag) {
         if (tag.size() == 1) {
-            Tag tag1 = tag.get(WRAPPER_MARKER);
+            Tag tag1 = tag.get(ListTag.WRAPPER_MARKER);
             if (tag1 != null) {
                 return tag1;
             }
@@ -48,8 +49,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param tag 需要判断的 CompoundTag.
      * @return 如果是包裹对象则返回 true, 否则返回 false.
      */
-    private static boolean isWrapper(CompoundTag tag) {
-        return tag.size() == 1 && tag.containsKey(WRAPPER_MARKER);
+    private static boolean isWrapper(@NotNull CompoundTag tag) {
+        return tag.size() == 1 && tag.containsKey(ListTag.WRAPPER_MARKER);
     }
 
     /**
@@ -62,11 +63,11 @@ public class ListTag extends CollectionTag<Tag> {
      * @param tag 需要被处理的 Tag 元素.
      * @return 原 Tag (无需处理时) 或包裹后的 CompoundTag.
      */
-    public static Tag wrapIfNeeded(byte elementType, Tag tag) {
+    public static @NotNull Tag wrapIfNeeded(byte elementType, @NotNull Tag tag) {
         if (elementType != 10) { // compound
             return tag;
         } else {
-            return tag instanceof CompoundTag compoundTag && !isWrapper(compoundTag) ? compoundTag : wrapElement(tag);
+            return tag instanceof CompoundTag compoundTag && !ListTag.isWrapper(compoundTag) ? compoundTag : ListTag.wrapElement(tag);
         }
     }
 
@@ -77,8 +78,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param tag 需要被包裹的底层 Tag.
      * @return 作为兼容性包裹层的 CompoundTag.
      */
-    private static CompoundTag wrapElement(Tag tag) {
-        return new CompoundTag(Map.of(WRAPPER_MARKER, tag));
+    private static @NotNull CompoundTag wrapElement(@NotNull Tag tag) {
+        return new CompoundTag(Map.of(ListTag.WRAPPER_MARKER, tag));
     }
 
     /**
@@ -87,9 +88,9 @@ public class ListTag extends CollectionTag<Tag> {
      *
      * @param tag 要添加到列表中的 Tag (可能是来自旧版存储协议中的被包裹状态).
      */
-    public void addAndUnwrap(Tag tag) {
+    public void addAndUnwrap(@NotNull Tag tag) {
         if (tag instanceof CompoundTag compoundTag) {
-            this.add(tryUnwrap(compoundTag));
+            this.add(ListTag.tryUnwrap(compoundTag));
         } else {
             this.add(tag);
         }
@@ -126,43 +127,43 @@ public class ListTag extends CollectionTag<Tag> {
      * @throws IOException IO 异常
      */
     @Override
-    public void write(DataOutput output) throws IOException {
-        byte type = identifyRawElementType();
+    public void write(@NotNull DataOutput output) throws IOException {
+        byte type = this.identifyRawElementType();
         output.writeByte(type);
         output.writeInt(this.list.size());
         for (Tag tag : this.list) {
-            wrapIfNeeded(type, tag).write(output);
+            ListTag.wrapIfNeeded(type, tag).write(output);
         }
     }
 
     @Override
-    public Tag get(int index) {
+    public @NotNull Tag get(int index) {
         return this.list.get(index);
     }
 
     @Override
-    public Tag set(int index, Tag tag) {
+    public @NotNull Tag set(int index, @NotNull Tag tag) {
         return this.list.set(index, tag);
     }
 
     @Override
-    public void add(int index, Tag tag) {
+    public void add(int index, @NotNull Tag tag) {
         this.list.add(index, tag);
     }
 
     @Override
-    public Tag remove(int index) {
+    public @NotNull Tag remove(int index) {
         return this.list.remove(index);
     }
 
     @Override
-    public boolean setTag(int index, Tag tag) {
+    public boolean setTag(int index, @NotNull Tag tag) {
         this.list.set(index, tag);
         return true;
     }
 
     @Override
-    public boolean addTag(int index, Tag tag) {
+    public boolean addTag(int index, @NotNull Tag tag) {
         this.list.add(index, tag);
         return true;
     }
@@ -179,21 +180,21 @@ public class ListTag extends CollectionTag<Tag> {
 
     @Override
     public byte getId() {
-        return TAG_LIST;
+        return Tag.TAG_LIST;
     }
 
     @Override
-    public TagType<?> getType() {
+    public@NotNull TagType<?> getType() {
         return TagTypes.LIST;
     }
 
     @Override
-    public ListTag copy() {
+    public @NotNull Tag copy() {
         return new ListTag(new ArrayList<>(this.list));
     }
 
     @Override
-    public ListTag deepClone() {
+    public @NotNull Tag deepClone() {
         List<Tag> list = new ArrayList<>(this.list.size());
         for (Tag tag : this.list) {
             list.add(tag.deepClone());
@@ -203,7 +204,7 @@ public class ListTag extends CollectionTag<Tag> {
 
     @Override
     public int sizeInBytes() {
-        int size = SELF_SIZE_IN_BYTES;
+        int size = ListTag.SELF_SIZE_IN_BYTES;
         size += 4 * this.list.size();
 
         for (Tag child : this.list) {
@@ -214,7 +215,7 @@ public class ListTag extends CollectionTag<Tag> {
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitList(this);
     }
 
@@ -224,8 +225,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param index 元素的索引
      * @return 指定索引处的 String 值, 若未找到或类型不匹配则返回 {@code null}
      */
-    public String getString(int index) {
-        return getString(index, null);
+    public @Nullable String getString(int index) {
+        return this.getString(index, null);
     }
 
     /**
@@ -235,8 +236,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param defaultValue 若元素不是 String 或不存在时返回的默认值
      * @return 指定索引处的 String 值, 或默认值
      */
-    public String getString(int index, String defaultValue) {
-        return this.getTypedValue(index, TAG_STRING, Tag::getAsString, defaultValue);
+    public @Nullable String getString(int index, String defaultValue) {
+        return this.getTypedValue(index, Tag.TAG_STRING, Tag::getAsString, defaultValue);
     }
 
     /**
@@ -246,7 +247,7 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 float 值, 若未找到或类型不匹配则返回 0
      */
     public float getFloat(int index) {
-        return getFloat(index, 0f);
+        return this.getFloat(index, 0f);
     }
 
     /**
@@ -257,7 +258,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 float 值, 或默认值
      */
     public float getFloat(int index, float defaultValue) {
-        return this.getTypedValue(index, TAG_FLOAT, t -> ((FloatTag) t).getAsFloat(), defaultValue);
+        Float value = this.getTypedValue(index, Tag.TAG_FLOAT, t -> ((FloatTag) t).getAsFloat(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -267,7 +270,7 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 double 值, 若未找到或类型不匹配则返回 0
      */
     public double getDouble(int index) {
-        return getDouble(index, 0d);
+        return this.getDouble(index, 0d);
     }
 
     /**
@@ -278,7 +281,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 double 值, 或默认值
      */
     public double getDouble(int index, double defaultValue) {
-        return this.getTypedValue(index, TAG_DOUBLE, t -> ((DoubleTag) t).getAsDouble(), defaultValue);
+        Double value = this.getTypedValue(index, Tag.TAG_DOUBLE, t -> ((DoubleTag) t).getAsDouble(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -287,8 +292,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param index 元素的索引
      * @return 指定索引处的 long 数组, 若未找到或类型不匹配则返回 {@code null}
      */
-    public long[] getLongArray(int index) {
-        return getLongArray(index, null);
+    public long @Nullable[] getLongArray(int index) {
+        return this.getLongArray(index, null);
     }
 
     /**
@@ -298,8 +303,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param defaultValue 若元素不是 long 数组或不存在时返回的默认值
      * @return 指定索引处的 long 数组, 或默认值
      */
-    public long[] getLongArray(int index, long[] defaultValue) {
-        return this.getTypedValue(index, TAG_LONG_ARRAY, t -> ((LongArrayTag) t).getAsLongArray(), defaultValue);
+    public long @Nullable[] getLongArray(int index, long @Nullable[] defaultValue) {
+        return this.getTypedValue(index, Tag.TAG_LONG_ARRAY, t -> ((LongArrayTag) t).getAsLongArray(), defaultValue);
     }
 
     /**
@@ -308,8 +313,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param index 元素的索引
      * @return 指定索引处的 int 数组, 若未找到或类型不匹配则返回 {@code null}
      */
-    public int[] getIntArray(int index) {
-        return getIntArray(index, null);
+    public int @Nullable[] getIntArray(int index) {
+        return this.getIntArray(index, null);
     }
 
     /**
@@ -319,8 +324,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param defaultValue 若元素不是 int 数组或不存在时返回的默认值
      * @return 指定索引处的 int 数组, 或默认值
      */
-    public int[] getIntArray(int index, int[] defaultValue) {
-        return this.getTypedValue(index, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsIntArray(), defaultValue);
+    public int @Nullable[] getIntArray(int index, int @Nullable[] defaultValue) {
+        return this.getTypedValue(index, Tag.TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsIntArray(), defaultValue);
     }
 
     /**
@@ -330,7 +335,7 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 int 值, 若未找到或类型不匹配则返回 0
      */
     public int getInt(int index) {
-        return getInt(index, 0);
+        return this.getInt(index, 0);
     }
 
     /**
@@ -341,7 +346,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 int 值, 或默认值
      */
     public int getInt(int index, int defaultValue) {
-        return this.getTypedValue(index, TAG_INT, t -> ((IntTag) t).getAsInt(), defaultValue);
+        Integer value = this.getTypedValue(index, Tag.TAG_INT, t -> ((IntTag) t).getAsInt(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -351,7 +358,7 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 short 值, 若未找到或类型不匹配则返回 0
      */
     public short getShort(int index) {
-        return getShort(index, (short) 0);
+        return this.getShort(index, (short) 0);
     }
 
     /**
@@ -362,7 +369,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 short 值, 或默认值
      */
     public short getShort(int index, short defaultValue) {
-        return this.getTypedValue(index, TAG_SHORT, t -> ((ShortTag) t).getAsShort(), defaultValue);
+        Short value = this.getTypedValue(index, Tag.TAG_SHORT, t -> ((ShortTag) t).getAsShort(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -383,7 +392,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 byte 值, 或默认值
      */
     public byte getByte(int index, byte defaultValue) {
-        return this.getTypedValue(index, TAG_BYTE, t -> ((ByteTag) t).getAsByte(), defaultValue);
+        Byte value = this.getTypedValue(index, Tag.TAG_BYTE, t -> ((ByteTag) t).getAsByte(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -393,7 +404,7 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 long 值, 若未找到或类型不匹配则返回 0
      */
     public long getLong(int index) {
-        return getLong(index, 0);
+        return this.getLong(index, 0);
     }
 
     /**
@@ -404,7 +415,9 @@ public class ListTag extends CollectionTag<Tag> {
      * @return 指定索引处的 long 值, 或默认值
      */
     public long getLong(int index, long defaultValue) {
-        return this.getTypedValue(index, TAG_LONG, t -> ((LongTag) t).getAsLong(), defaultValue);
+        Long value = this.getTypedValue(index, Tag.TAG_LONG, t -> ((LongTag) t).getAsLong(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -413,8 +426,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param index 元素的索引
      * @return 指定索引处的 ListTag, 若未找到或类型不匹配则返回 {@code null}
      */
-    public ListTag getList(int index) {
-        return getList(index, null);
+    public @Nullable ListTag getList(int index) {
+        return this.getList(index, null);
     }
 
     /**
@@ -424,8 +437,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param defaultValue 若元素不是 ListTag 或不存在时返回的默认值
      * @return 指定索引处的 ListTag, 或默认值
      */
-    public ListTag getList(int index, ListTag defaultValue) {
-        return this.getTypedValue(index, TAG_LIST, t -> (ListTag) t, defaultValue);
+    public @Nullable ListTag getList(int index, @Nullable ListTag defaultValue) {
+        return this.getTypedValue(index, Tag.TAG_LIST, t -> (ListTag) t, defaultValue);
     }
 
     /**
@@ -434,8 +447,8 @@ public class ListTag extends CollectionTag<Tag> {
      * @param index 元素的索引
      * @return 指定索引处的 CompoundTag, 若未找到或类型不匹配则返回 {@code null}
      */
-    public CompoundTag getCompound(int index) {
-        return getCompound(index, null);
+    public @Nullable CompoundTag getCompound(int index) {
+        return this.getCompound(index, null);
     }
 
     /**
@@ -445,11 +458,11 @@ public class ListTag extends CollectionTag<Tag> {
      * @param defaultValue 若元素不是 CompoundTag 或不存在时返回的默认值
      * @return 指定索引处的 CompoundTag, 或默认值
      */
-    public CompoundTag getCompound(int index, CompoundTag defaultValue) {
-        return this.getTypedValue(index, TAG_COMPOUND, t -> (CompoundTag) t, defaultValue);
+    public @Nullable CompoundTag getCompound(int index, @Nullable CompoundTag defaultValue) {
+        return this.getTypedValue(index, Tag.TAG_COMPOUND, t -> (CompoundTag) t, defaultValue);
     }
 
-    private <T> T getTypedValue(int index, int expectedId, Function<Tag, T> extractor, T defaultValue) {
+    private <T> @Nullable T getTypedValue(int index, int expectedId, @NotNull Function<Tag, T> extractor, @Nullable T defaultValue) {
         if (index >= 0 && index < this.list.size()) {
             Tag tag = this.list.get(index);
             if (tag.getId() == expectedId) {
@@ -463,7 +476,7 @@ public class ListTag extends CollectionTag<Tag> {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ListTag tags)) return false;
-        return Objects.equals(list, tags.list);
+        return Objects.equals(this.list, tags.list);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.nyana.nbt.tag;
 
 import net.nyana.nbt.tag.visitor.CompactStringTagVisitor;
 import net.nyana.nbt.tag.visitor.TagVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public interface Tag {
      *
      * @return 与此标签关联的特定 TagType 实例
      */
-    TagType<?> getType();
+    @NotNull TagType<?> getType();
 
     /**
      * 将此标签的二进制表示写入指定的输出流.
@@ -43,21 +44,21 @@ public interface Tag {
      * @param output 要写入的数据输出流
      * @throws IOException 如果写入时发生 I/O 错误
      */
-    void write(DataOutput output) throws IOException;
+    void write(@NotNull DataOutput output) throws IOException;
 
     /**
      * 创建此标签的浅拷贝.
      *
      * @return 与当前标签内容相同的新 Tag 实例
      */
-    Tag copy();
+    @NotNull Tag copy();
 
     /**
      * 创建此标签的深度克隆, 包括所有嵌套元素.
      *
      * @return 一个新的 Tag 实例
      */
-    Tag deepClone();
+    @NotNull Tag deepClone();
 
     /**
      * 当前Tag进行序列化后, 占用的字节数量.
@@ -71,7 +72,7 @@ public interface Tag {
      *
      * @param visitor 用于处理此标签的访问者实例
      */
-    void accept(TagVisitor visitor);
+    void accept(@NotNull TagVisitor visitor);
 
     /**
      * 检查此标签是否为指定类型, 或是否匹配通用数值类型.
@@ -80,13 +81,13 @@ public interface Tag {
      * @return 若标签匹配指定类型则返回 true, 否则返回 false
      */
     default boolean isTypeOf(int type) {
-        int i = getId();
+        int i = this.getId();
         if (i == type) {
             return true;
-        } else if (type != TAG_ANY_NUMERIC) {
+        } else if (type != Tag.TAG_ANY_NUMERIC) {
             return false;
         } else {
-            return isNumericTag(i);
+            return Tag.isNumericTag(i);
         }
     }
 
@@ -95,7 +96,7 @@ public interface Tag {
      *
      * @return 以紧凑格式表示该标签的字符串
      */
-    default String getAsString() {
+    default @NotNull String getAsString() {
         return (new CompactStringTagVisitor()).visit(this);
     }
 
@@ -115,7 +116,7 @@ public interface Tag {
      */
     static boolean isNumericTag(int tagType) {
         return switch (tagType) {
-            case TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE -> true;
+            case Tag.TAG_BYTE, Tag.TAG_SHORT, Tag.TAG_INT, Tag.TAG_LONG, Tag.TAG_FLOAT, Tag.TAG_DOUBLE -> true;
             default -> false;
         };
     }

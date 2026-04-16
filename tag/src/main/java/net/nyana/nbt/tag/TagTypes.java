@@ -1,6 +1,6 @@
 package net.nyana.nbt.tag;
 
-import java.io.DataInput;
+import org.jetbrains.annotations.NotNull;import java.io.DataInput;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,20 +9,20 @@ public class TagTypes {
 
     public static final TagType<EndTag> END = new TagType<>() {
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "End";
         }
 
         @Override
-        public void skip(DataInput input, int count) {
+        public void skip(@NotNull DataInput input, int count) {
         }
 
         @Override
-        public void skip(DataInput input) {
+        public void skip(@NotNull DataInput input) {
         }
 
         @Override
-        public EndTag read(DataInput input, int depth) {
+        public @NotNull EndTag read(@NotNull DataInput input, int depth) {
             return new EndTag();
         }
     };
@@ -30,7 +30,7 @@ public class TagTypes {
     public static final TagType<ByteTag> BYTE = new TagType.FixedSize<>() {
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Byte";
         }
 
@@ -40,7 +40,7 @@ public class TagTypes {
         }
 
         @Override
-        public ByteTag read(DataInput input, int depth) throws IOException {
+        public @NotNull ByteTag read(@NotNull DataInput input, int depth) throws IOException {
             return new ByteTag(input.readByte());
         }
 
@@ -52,7 +52,7 @@ public class TagTypes {
 
     public static final TagType<ShortTag> SHORT = new TagType.FixedSize<>() {
         @Override
-        public ShortTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull ShortTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             return new ShortTag(dataInput.readShort());
         }
 
@@ -62,7 +62,7 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Short";
         }
 
@@ -74,7 +74,7 @@ public class TagTypes {
 
     public static final TagType<IntTag> INT = new TagType.FixedSize<>() {
         @Override
-        public IntTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull IntTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             return new IntTag(dataInput.readInt());
         }
 
@@ -84,7 +84,7 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Int";
         }
 
@@ -96,7 +96,7 @@ public class TagTypes {
 
     public static final TagType<LongTag> LONG = new TagType.FixedSize<>() {
         @Override
-        public LongTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull LongTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             return new LongTag(dataInput.readLong());
         }
 
@@ -106,7 +106,7 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Long";
         }
 
@@ -118,7 +118,7 @@ public class TagTypes {
 
     public static final TagType<FloatTag> FLOAT = new TagType.FixedSize<>() {
         @Override
-        public FloatTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull FloatTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             return new FloatTag(dataInput.readFloat());
         }
 
@@ -128,7 +128,7 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Float";
         }
 
@@ -140,7 +140,7 @@ public class TagTypes {
 
     public static final TagType<DoubleTag> DOUBLE = new TagType.FixedSize<>() {
         @Override
-        public DoubleTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull DoubleTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             return new DoubleTag(dataInput.readDouble());
         }
 
@@ -150,7 +150,7 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Double";
         }
 
@@ -162,7 +162,7 @@ public class TagTypes {
 
     public static final TagType<ByteArrayTag> BYTE_ARRAY = new TagType.FlexibleSize<>() {
         @Override
-        public ByteArrayTag read(DataInput input, int depth) throws IOException {
+        public @NotNull ByteArrayTag read(@NotNull DataInput input, int depth) throws IOException {
             int length = input.readInt();
             byte[] array = new byte[length];
             input.readFully(array);
@@ -170,30 +170,30 @@ public class TagTypes {
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             input.skipBytes(input.readInt());
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Byte[]";
         }
     };
 
     public static final TagType<StringTag> STRING = new TagType.FlexibleSize<>() {
         @Override
-        public StringTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull StringTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             String string = dataInput.readUTF();
             return new StringTag(string);
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             StringTag.skipString(input);
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "String";
         }
 
@@ -205,7 +205,7 @@ public class TagTypes {
 
     public static final TagType<ListTag> LIST = new TagType.FlexibleSize<>() {
         @Override
-        public ListTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull ListTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             if (depth > 512) {
                 throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
             } else {
@@ -225,21 +225,21 @@ public class TagTypes {
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             TagType<?> tagType = TagTypes.typeById(input.readByte());
             int i = input.readInt();
             tagType.skip(input, i);
         }
 
         @Override
-        public String name() {
+        public@NotNull String name() {
             return "List";
         }
     };
 
     public static final TagType<CompoundTag> COMPOUND = new TagType.FlexibleSize<>() {
         @Override
-        public CompoundTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull CompoundTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             if (depth > 512) {
                 throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
             } else {
@@ -255,7 +255,7 @@ public class TagTypes {
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             byte typeId;
             while ((typeId = input.readByte()) != Tag.TAG_END) {
                 StringTag.skipString(input);
@@ -264,14 +264,14 @@ public class TagTypes {
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Compound";
         }
     };
 
     public static final TagType<IntArrayTag> INT_ARRAY = new TagType.FlexibleSize<>() {
         @Override
-        public IntArrayTag read(DataInput input, int depth) throws IOException {
+        public @NotNull IntArrayTag read(@NotNull DataInput input, int depth) throws IOException {
             int length = input.readInt();
             int[] array = new int[length];
             for (int k = 0; k < length; ++k) {
@@ -281,19 +281,19 @@ public class TagTypes {
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             input.skipBytes(input.readInt() * 4);
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Int[]";
         }
     };
 
     public static final TagType<LongArrayTag> LONG_ARRAY = new TagType.FlexibleSize<>() {
         @Override
-        public LongArrayTag read(DataInput dataInput, int depth) throws IOException {
+        public @NotNull LongArrayTag read(@NotNull DataInput dataInput, int depth) throws IOException {
             int length = dataInput.readInt();
             long[] array = new long[length];
             for (int k = 0; k < length; ++k) {
@@ -303,12 +303,12 @@ public class TagTypes {
         }
 
         @Override
-        public void skip(DataInput input) throws IOException {
+        public void skip(@NotNull DataInput input) throws IOException {
             input.skipBytes(input.readInt() * 8);
         }
 
         @Override
-        public String name() {
+        public @NotNull String name() {
             return "Long[]";
         }
     };
@@ -325,7 +325,7 @@ public class TagTypes {
      * @return 给定 ID 对应的 TagType
      * @throws ArrayIndexOutOfBoundsException 如果ID超出有效范围
      */
-    public static TagType<?> typeById(int id) {
+    public static @NotNull TagType<?> typeById(int id) {
         return TYPES[id];
     }
 }

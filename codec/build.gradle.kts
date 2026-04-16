@@ -5,6 +5,9 @@ repositories {
 dependencies {
     compileOnly(project(":tag"))
     compileOnly("com.mojang:datafixerupper:8.0.16")
+
+    testImplementation(project(":tag"))
+    testImplementation("com.mojang:datafixerupper:8.0.16")
 }
 
 publishing {

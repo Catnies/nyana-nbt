@@ -1,6 +1,6 @@
 package net.nyana.nbt.tag;
 
-import net.nyana.nbt.tag.visitor.TagVisitor;
+import net.nyana.nbt.tag.visitor.TagVisitor;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -11,15 +11,15 @@ public class StringTag implements Tag {
     private static final StringTag EMPTY = new StringTag("");
     private final String value;
 
-    public StringTag(String value) {
+    public StringTag(@NotNull String value) {
         this.value = value;
     }
 
-    public static void skipString(DataInput input) throws IOException {
+    public static void skipString(@NotNull DataInput input) throws IOException {
         input.skipBytes(input.readUnsignedShort());
     }
 
-    public String value() {
+    public @NotNull String value() {
         return value;
     }
 
@@ -29,22 +29,22 @@ public class StringTag implements Tag {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.STRING;
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         output.writeUTF(this.value);
     }
 
     @Override
-    public StringTag copy() {
+    public @NotNull Tag copy() {
         return this;
     }
 
     @Override
-    public StringTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new StringTag(this.value);
     }
 
@@ -54,7 +54,7 @@ public class StringTag implements Tag {
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitString(this);
     }
 
@@ -66,7 +66,7 @@ public class StringTag implements Tag {
      * @param value 要引用和转义的输入字符串
      * @return 转义并加引号的字符串
      */
-    public static String quoteAndEscape(String value) {
+    public static @NotNull String quoteAndEscape(@NotNull String value) {
         StringBuilder stringBuilder = new StringBuilder(" ");
         char quoteChar = 0;
         for (int i = 0; i < value.length(); ++i) {
@@ -92,12 +92,12 @@ public class StringTag implements Tag {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return Tag.super.getAsString();
     }
 
     @Override
-    public String getAsString() {
+    public @NotNull String getAsString() {
         return this.value;
     }
 

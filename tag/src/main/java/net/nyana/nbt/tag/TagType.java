@@ -1,5 +1,7 @@
 package net.nyana.nbt.tag;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.DataInput;
 import java.io.IOException;
 
@@ -10,7 +12,7 @@ public interface TagType<T extends Tag> {
      *
      * @return 标签类型的名称
      */
-    String name();
+    @NotNull String name();
 
     /**
      * 在输入流中跳过指定数量的标签.
@@ -19,7 +21,7 @@ public interface TagType<T extends Tag> {
      * @param count 要跳过的标签数量
      * @throws IOException 如果发生 I/O 错误
      */
-    void skip(DataInput input, int count) throws IOException;
+    void skip(@NotNull DataInput input, int count) throws IOException;
 
     /**
      * 在输入流中跳过单个标签.
@@ -27,7 +29,7 @@ public interface TagType<T extends Tag> {
      * @param input 要跳过数据的输入流
      * @throws IOException 如果发生 I/O 错误
      */
-    void skip(DataInput input) throws IOException;
+    void skip(@NotNull DataInput input) throws IOException;
 
     /**
      * 以指定深度从输入流中读取一个标签.
@@ -37,7 +39,7 @@ public interface TagType<T extends Tag> {
      * @return 从输入流中读取到的标签
      * @throws IOException 如果发生 I/O 错误
      */
-    T read(DataInput input, int depth) throws IOException;
+    @NotNull T read(@NotNull DataInput input, int depth) throws IOException;
 
     /**
      * 检查此标记类型是否表示一个值.
@@ -69,7 +71,7 @@ public interface TagType<T extends Tag> {
          * @throws IOException 如果发生 I/O 错误
          */
         @Override
-        default void skip(DataInput input) throws IOException {
+        default void skip(@NotNull DataInput input) throws IOException {
             input.skipBytes(this.size());
         }
 
@@ -81,7 +83,7 @@ public interface TagType<T extends Tag> {
          * @throws IOException 如果发生 I/O 错误
          */
         @Override
-        default void skip(DataInput input, int count) throws IOException {
+        default void skip(@NotNull DataInput input, int count) throws IOException {
             input.skipBytes(this.size() * count);
         }
     }
@@ -101,7 +103,7 @@ public interface TagType<T extends Tag> {
          * @throws IOException 如果发生 I/O 错误
          */
         @Override
-        default void skip(DataInput input, int count) throws IOException {
+        default void skip(@NotNull DataInput input, int count) throws IOException {
             for (int i = 0; i < count; ++i) {
                 this.skip(input);
             }

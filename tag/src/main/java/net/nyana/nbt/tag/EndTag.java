@@ -1,6 +1,6 @@
 package net.nyana.nbt.tag;
 
-import net.nyana.nbt.tag.visitor.TagVisitor;
+import net.nyana.nbt.tag.visitor.TagVisitor;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 
@@ -14,21 +14,21 @@ public class EndTag implements Tag {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.END;
     }
 
     @Override
-    public void write(DataOutput output) {
+    public void write(@NotNull DataOutput output) {
     }
 
     @Override
-    public Tag copy() {
+    public @NotNull Tag copy() {
         return this;
     }
 
     @Override
-    public EndTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new EndTag();
     }
 
@@ -38,12 +38,12 @@ public class EndTag implements Tag {
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitEnd(this);
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getAsString();
     }
 }

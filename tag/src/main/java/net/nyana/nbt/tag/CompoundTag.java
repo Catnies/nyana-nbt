@@ -30,12 +30,12 @@ public class CompoundTag implements Tag {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.COMPOUND;
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         for (Map.Entry<String, Tag> entry : tags.entrySet()) {
             writeNamedTag(entry.getKey(), entry.getValue(), output);
         }
@@ -51,7 +51,7 @@ public class CompoundTag implements Tag {
     }
 
     @Override
-    public CompoundTag copy() {
+    public @NotNull CompoundTag copy() {
         Map<String, Tag> newTags = new HashMap<>(tags.size(), 0.8f);
         for (Map.Entry<String, Tag> entry : tags.entrySet()) {
             newTags.put(entry.getKey(), entry.getValue().copy());
@@ -60,7 +60,7 @@ public class CompoundTag implements Tag {
     }
 
     @Override
-    public CompoundTag deepClone() {
+    public @NotNull Tag deepClone() {
         Map<String, Tag> newTags = new HashMap<>(tags.size(), 0.8f);
         for (Map.Entry<String, Tag> entry : tags.entrySet()) {
             newTags.put(entry.getKey(), entry.getValue().deepClone());
@@ -82,7 +82,7 @@ public class CompoundTag implements Tag {
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitCompound(this);
     }
 
@@ -93,7 +93,7 @@ public class CompoundTag implements Tag {
      * @return 表示标签类型的 byte ID
      * @throws IOException 如果读取时发生 I/O 错误
      */
-    static byte readNamedTagType(DataInput input) throws IOException {
+    static byte readNamedTagType(@NotNull DataInput input) throws IOException {
         return input.readByte();
     }
 
@@ -104,7 +104,7 @@ public class CompoundTag implements Tag {
      * @return 表示标签名称的字符串
      * @throws IOException 如果读取时发生 I/O 错误
      */
-    static String readNamedTagName(DataInput input) throws IOException {
+    static @NotNull String readNamedTagName(@NotNull DataInput input) throws IOException {
         return input.readUTF();
     }
 
@@ -118,7 +118,7 @@ public class CompoundTag implements Tag {
      * @return 从输入中读取到的 Tag 实例
      * @throws RuntimeException 如果读取时发生 IOException
      */
-    static Tag readNamedTagData(TagType<?> reader, DataInput input, int depth) {
+    static @NotNull Tag readNamedTagData(@NotNull TagType<?> reader, @NotNull DataInput input, int depth) {
         try {
             return reader.read(input, depth);
         } catch (IOException ioException) {
@@ -133,9 +133,12 @@ public class CompoundTag implements Tag {
      * @param element 要存储的标签
      * @return 该键之前关联的标签, 若不存在则返回 null
      */
-    @Nullable
-    public Tag put(@NotNull String key, Tag element) {
-        return this.tags.put(key, element);
+    public @Nullable Tag put(@NotNull String key, @Nullable Tag element) {
+        if (element == null) {
+            return this.tags.remove(key);
+        }else {
+            return this.tags.put(key, element);
+        }
     }
 
     /**
@@ -312,7 +315,9 @@ public class CompoundTag implements Tag {
      * @return 与该键关联的 byte 值, 或默认值
      */
     public byte getByte(@NotNull String key, byte defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsByte(), defaultValue);
+        Byte value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsByte(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -334,7 +339,9 @@ public class CompoundTag implements Tag {
      * @return 与该键关联的 short 值, 或默认值
      */
     public short getShort(@NotNull String key, short defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsShort(), defaultValue);
+        Short value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsShort(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     public int getInt(@NotNull String key) {
@@ -342,7 +349,9 @@ public class CompoundTag implements Tag {
     }
 
     public int getInt(@NotNull String key, int defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsInt(), defaultValue);
+        Integer value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsInt(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     public long getLong(@NotNull String key) {
@@ -350,23 +359,29 @@ public class CompoundTag implements Tag {
     }
 
     public long getLong(@NotNull String key, long defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsLong(), defaultValue);
+        Long value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsLong(), defaultValue);
+        assert value != null;
+        return value;
     }
 
-    public float getFloat(String key) {
+    public float getFloat(@NotNull String key) {
         return getFloat(key, 0f);
     }
 
     public float getFloat(@NotNull String key, float defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsFloat(), defaultValue);
+        Float value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsFloat(), defaultValue);
+        assert value != null;
+        return value;
     }
 
-    public double getDouble(String key) {
+    public double getDouble(@NotNull String key) {
         return getDouble(key, 0d);
     }
 
     public double getDouble(@NotNull String key, double defaultValue) {
-        return getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsDouble(), defaultValue);
+        Double value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsDouble(), defaultValue);
+        assert value != null;
+        return value;
     }
 
     /**
@@ -376,7 +391,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的字符串值, 若不存在则返回 null
      */
-    public String getString(@NotNull String key) {
+    public @Nullable String getString(@NotNull  String key) {
         return getString(key, null);
     }
 
@@ -387,7 +402,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在时返回的默认值
      * @return 与该键关联的字符串值, 或默认值
      */
-    public String getString(@NotNull String key, String defaultValue) {
+    public @Nullable String getString(@NotNull String key, @Nullable String defaultValue) {
         return getOrDefault(key, TAG_STRING, Tag::getAsString, defaultValue);
     }
 
@@ -398,7 +413,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 byte 数组, 若不存在则返回 null
      */
-    public byte[] getByteArray(String key) {
+    public byte @Nullable[] getByteArray(@NotNull String key) {
         return getByteArray(key, null);
     }
 
@@ -410,7 +425,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不兼容时返回的默认值
      * @return 与该键关联的 byte 数组, 或默认值
      */
-    public byte[] getByteArray(@NotNull String key, byte[] defaultValue) {
+    public byte @Nullable [] getByteArray(@NotNull String key, byte @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_BYTE_ARRAY, t -> ((ByteArrayTag) t).getAsByteArray(), defaultValue);
     }
 
@@ -421,7 +436,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 int 数组, 若不存在则返回 null
      */
-    public int[] getIntArray(String key) {
+    public int @Nullable [] getIntArray(@NotNull String key) {
         return getIntArray(key, null);
     }
 
@@ -433,7 +448,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不兼容时返回的默认值
      * @return 与该键关联的 int 数组, 或默认值
      */
-    public int[] getIntArray(@NotNull String key, int[] defaultValue) {
+    public int @Nullable [] getIntArray(@NotNull String key, int @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsIntArray(), defaultValue);
     }
 
@@ -444,7 +459,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 UUID, 若不存在则返回 null
      */
-    public UUID getUUID(String key) {
+    public @Nullable UUID getUUID(@NotNull String key) {
         return getUUID(key, null);
     }
 
@@ -456,7 +471,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不兼容时返回的默认值
      * @return 与该键关联的 UUID, 或默认值
      */
-    public UUID getUUID(@NotNull String key, UUID defaultValue) {
+    public @Nullable UUID getUUID(@NotNull String key, @Nullable UUID defaultValue) {
         return getOrDefault(key, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsUUID(), defaultValue);
     }
 
@@ -467,7 +482,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 long 数组, 若不存在则返回 null
      */
-    public long[] getLongArray(String key) {
+    public long @Nullable [] getLongArray(@NotNull String key) {
         return getLongArray(key, null);
     }
 
@@ -478,7 +493,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不兼容时返回的默认值
      * @return 与该键关联的 long 数组, 或默认值
      */
-    public long[] getLongArray(@NotNull String key, long[] defaultValue) {
+    public long @Nullable [] getLongArray(@NotNull String key, long @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_LONG_ARRAY, t -> ((LongArrayTag) t).getAsLongArray(), defaultValue);
     }
 
@@ -489,7 +504,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 CompoundTag, 若不存在则返回 null
      */
-    public CompoundTag getCompound(String key) {
+    public @Nullable CompoundTag getCompound(@NotNull String key) {
         return getCompound(key, null);
     }
 
@@ -500,7 +515,7 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不匹配时返回的默认值
      * @return 与该键关联的 CompoundTag, 或默认值
      */
-    public CompoundTag getCompound(@NotNull String key, CompoundTag defaultValue) {
+    public @Nullable CompoundTag getCompound(@NotNull String key, @Nullable CompoundTag defaultValue) {
         return getOrDefault(key, TAG_COMPOUND, t -> (CompoundTag) t, defaultValue);
     }
 
@@ -511,7 +526,7 @@ public class CompoundTag implements Tag {
      * @param key 要查找的键
      * @return 与该键关联的 ListTag, 若不存在则返回 null
      */
-    public ListTag getList(String key) {
+    public @Nullable ListTag getList(@NotNull String key) {
         return getList(key, null);
     }
 
@@ -522,16 +537,16 @@ public class CompoundTag implements Tag {
      * @param defaultValue 若键不存在或类型不匹配时返回的默认值
      * @return 与该键关联的 ListTag, 或默认值
      */
-    public ListTag getList(@NotNull String key, ListTag defaultValue) {
+    public @Nullable ListTag getList(@NotNull String key, @Nullable ListTag defaultValue) {
         return getOrDefault(key, TAG_LIST, t -> (ListTag) t, defaultValue);
     }
 
-    private <T> T getOrDefault(@NotNull String key, int expectedType, @NotNull Function<Tag, T> extractor, T defaultValue) {
+    private <T> @Nullable T getOrDefault(@NotNull String key, int expectedType, @NotNull Function<Tag, T> extractor, @Nullable T defaultValue) {
         Tag tag = tags.get(key);
         return tag != null && tag.isTypeOf(expectedType) ? extractor.apply(tag) : defaultValue;
     }
 
-    public byte getTagType(String key) {
+    public byte getTagType(@NotNull String key) {
         Tag tag = this.tags.get(key);
         return tag == null ? 0 : tag.getId();
     }
@@ -540,13 +555,11 @@ public class CompoundTag implements Tag {
         return tags.size();
     }
 
-    @NotNull
-    public Set<String> keySet() {
+    public @NotNull Set<String> keySet() {
         return this.tags.keySet();
     }
 
-    @NotNull
-    public Set<Map.Entry<String, Tag>> entrySet() {
+    public @NotNull Set<Map.Entry<String, Tag>> entrySet() {
         return this.tags.entrySet();
     }
 
@@ -565,7 +578,7 @@ public class CompoundTag implements Tag {
      *
      * @param key 要移除的标签对应的键
      */
-    public void remove(String key) {
+    public void remove(@NotNull String key) {
         this.tags.remove(key);
     }
 
@@ -575,7 +588,7 @@ public class CompoundTag implements Tag {
      * @param key 要检查的键
      * @return 若复合标签包含该键则返回 true, 否则返回 false
      */
-    public boolean containsKey(String key) {
+    public boolean containsKey(@NotNull String key) {
         return this.tags.containsKey(key);
     }
 
@@ -592,7 +605,7 @@ public class CompoundTag implements Tag {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getAsString();
     }
 }

@@ -1,7 +1,7 @@
 package net.nyana.nbt.tag;
 
 import net.nyana.nbt.tag.visitor.TagVisitor;
-import net.nyana.nbt.util.ArrayUtil;
+import net.nyana.nbt.util.ArrayUtil;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -16,24 +16,24 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public LongTag get(int index) {
+    public @NotNull LongTag get(int index) {
         return new LongTag(data[index]);
     }
 
     @Override
-    public LongTag set(int index, LongTag tag) {
+    public @NotNull LongTag set(int index, @NotNull LongTag tag) {
         long l = this.data[index];
         this.data[index] = tag.getAsLong();
         return new LongTag(l);
     }
 
     @Override
-    public void add(int index, LongTag tag) {
+    public void add(int index, @NotNull LongTag tag) {
         this.data = ArrayUtil.add(this.data, index, tag.getAsLong());
     }
 
     @Override
-    public LongTag remove(int index) {
+    public @NotNull LongTag remove(int index) {
         long l = this.data[index];
         this.data = ArrayUtil.remove(this.data, index);
         return new LongTag(l);
@@ -50,7 +50,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public boolean setTag(int index, Tag tag) {
+    public boolean setTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data[index] = ((NumericTag) tag).getAsLong();
             return true;
@@ -60,7 +60,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public boolean addTag(int index, Tag tag) {
+    public boolean addTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data = ArrayUtil.add(this.data, index, ((NumericTag) tag).getAsLong());
             return true;
@@ -80,7 +80,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         output.writeInt(this.data.length);
         for(long l : this.data) {
             output.writeLong(l);
@@ -88,12 +88,12 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public TagType<?> getType() {
+    public@NotNull TagType<?> getType() {
         return TagTypes.LONG_ARRAY;
     }
 
     @Override
-    public LongArrayTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new LongArrayTag(this.data.clone());
     }
 
@@ -103,12 +103,12 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public LongArrayTag copy() {
+    public @NotNull Tag copy() {
         return deepClone();
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitLongArray(this);
     }
 
@@ -121,7 +121,7 @@ public class LongArrayTag extends CollectionTag<LongTag> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getAsString();
     }
 

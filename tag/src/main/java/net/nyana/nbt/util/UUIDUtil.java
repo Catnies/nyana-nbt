@@ -1,5 +1,7 @@
 package net.nyana.nbt.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 /**
@@ -19,7 +21,7 @@ public class UUIDUtil {
      * @param array 长度为 4 的 {@code int} 数组
      * @return 对应的 {@link UUID}
      */
-    public static UUID uuidFromIntArray(int[] array) {
+    public static @NotNull UUID uuidFromIntArray(int[] array) {
         return new UUID((long) array[0] << 32 | (long) array[1] & 4294967295L, (long) array[2] << 32 | (long) array[3] & 4294967295L);
     }
 
@@ -33,7 +35,7 @@ public class UUIDUtil {
      * @param uuid 要转换的 {@link UUID}，不可为 {@code null}
      * @return 长度为 4 的 {@code int} 数组
      */
-    public static int[] uuidToIntArray(UUID uuid) {
+    public static int[] uuidToIntArray(@NotNull UUID uuid) {
         long uuidMost = uuid.getMostSignificantBits();
         long uuidLeast = uuid.getLeastSignificantBits();
         return new int[]{(int) (uuidMost >> 32), (int) uuidMost, (int) (uuidLeast >> 32), (int) uuidLeast};

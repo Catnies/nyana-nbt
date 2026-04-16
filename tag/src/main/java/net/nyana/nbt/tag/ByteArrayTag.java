@@ -1,7 +1,7 @@
 package net.nyana.nbt.tag;
 
 import net.nyana.nbt.tag.visitor.TagVisitor;
-import net.nyana.nbt.util.ArrayUtil;
+import net.nyana.nbt.util.ArrayUtil;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -24,23 +24,23 @@ public class ByteArrayTag extends CollectionTag<ByteTag> {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.BYTE_ARRAY;
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         output.writeInt(this.data.length);
         output.write(this.data);
     }
 
     @Override
-    public ByteArrayTag copy() {
+    public @NotNull Tag copy() {
         return deepClone();
     }
 
     @Override
-    public ByteArrayTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new ByteArrayTag(this.data.clone());
     }
 
@@ -50,36 +50,36 @@ public class ByteArrayTag extends CollectionTag<ByteTag> {
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitByteArray(this);
     }
 
     @Override
-    public ByteTag set(int index, ByteTag tag) {
+    public @NotNull ByteTag set(int index, @NotNull ByteTag tag) {
         byte b0 = this.data[index];
         this.data[index] = tag.getAsByte();
         return new ByteTag(b0);
     }
 
     @Override
-    public void add(int index, ByteTag tag) {
+    public void add(int index, @NotNull ByteTag tag) {
         this.data = ArrayUtil.add(this.data, index, tag.getAsByte());
     }
 
     @Override
-    public ByteTag remove(int index) {
+    public @NotNull ByteTag remove(int index) {
         byte b0 = this.data[index];
         this.data = ArrayUtil.remove(this.data, index);
         return new ByteTag(b0);
     }
 
     @Override
-    public ByteTag get(int index) {
+    public @NotNull ByteTag get(int index) {
         return new ByteTag(this.data[index]);
     }
 
     @Override
-    public boolean setTag(int index, Tag tag) {
+    public boolean setTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data[index] = ((NumericTag) tag).getAsByte();
             return true;
@@ -89,7 +89,7 @@ public class ByteArrayTag extends CollectionTag<ByteTag> {
     }
 
     @Override
-    public boolean addTag(int index, Tag tag) {
+    public boolean addTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data = ArrayUtil.add(this.data, index, ((NumericTag) tag).getAsByte());
             return true;

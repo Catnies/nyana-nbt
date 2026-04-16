@@ -18,67 +18,67 @@ public class NBT {
 
     private NBT() {}
 
-    public static ByteTag createByte(byte b) {
+    public static @NotNull ByteTag createByte(byte b) {
         return new ByteTag(b);
     }
 
-    public static ByteTag createBoolean(boolean b) {
+    public static @NotNull ByteTag createBoolean(boolean b) {
         return new ByteTag(b);
     }
 
-    public static ShortTag createShort(short s) {
+    public static @NotNull ShortTag createShort(short s) {
         return new ShortTag(s);
     }
 
-    public static IntTag createInt(int i) {
+    public static @NotNull IntTag createInt(int i) {
         return new IntTag(i);
     }
 
-    public static LongTag createLong(long l) {
+    public static @NotNull LongTag createLong(long l) {
         return new LongTag(l);
     }
 
-    public static FloatTag createFloat(float f) {
+    public static @NotNull FloatTag createFloat(float f) {
         return new FloatTag(f);
     }
 
-    public static DoubleTag createDouble(double d) {
+    public static @NotNull DoubleTag createDouble(double d) {
         return new DoubleTag(d);
     }
 
-    public static StringTag createString(String s) {
+    public static @NotNull StringTag createString(@NotNull String s) {
         return new StringTag(s);
     }
 
-    public static IntArrayTag createIntArray(int[] a) {
+    public static @NotNull IntArrayTag createIntArray(int[] a) {
         return new IntArrayTag(a);
     }
 
-    public static IntArrayTag createUUID(UUID uuid) {
+    public static @NotNull IntArrayTag createUUID(@NotNull UUID uuid) {
         return new IntArrayTag(UUIDUtil.uuidToIntArray(uuid));
     }
 
-    public static ByteArrayTag createByteArray(byte[] b) {
+    public static @NotNull ByteArrayTag createByteArray(byte[] b) {
         return new ByteArrayTag(b);
     }
 
-    public static LongArrayTag createLongArray(long[] a) {
+    public static @NotNull LongArrayTag createLongArray(long[] a) {
         return new LongArrayTag(a);
     }
 
-    public static CompoundTag createCompound(Map<String, Tag> tags) {
+    public static @NotNull CompoundTag createCompound(@NotNull Map<String, Tag> tags) {
         return new CompoundTag(tags);
     }
 
-    public static CompoundTag createCompound() {
+    public static @NotNull CompoundTag createCompound() {
         return new CompoundTag();
     }
 
-    public static ListTag createList() {
+    public static @NotNull ListTag createList() {
         return new ListTag();
     }
 
-    public static ListTag createList(List<Tag> tags) {
+    public static @NotNull ListTag createList(@NotNull List<Tag> tags) {
         return new ListTag(tags);
     }
 
@@ -89,7 +89,7 @@ public class NBT {
      * @return 读取到的 NBT 标签
      * @throws IOException 如果发生 I/O 错误
      */
-    public static Tag readUnnamedTag(DataInput input, boolean named) throws IOException {
+    public static @NotNull Tag readUnnamedTag(@NotNull DataInput input, boolean named) throws IOException {
         byte typeId = input.readByte();
         if (typeId == 0) {
             return EndTag.INSTANCE;
@@ -112,7 +112,7 @@ public class NBT {
      * @param output 要写入的输出流
      * @throws IOException 如果发生 I/O 错误
      */
-    public static void writeUnnamedTag(Tag tag, DataOutput output, boolean named) throws IOException {
+    public static void writeUnnamedTag(@NotNull Tag tag, @NotNull DataOutput output, boolean named) throws IOException {
         output.writeByte(tag.getId());
         if (tag.getId() != Tag.TAG_END) {
             if (named) {
@@ -129,7 +129,7 @@ public class NBT {
      * @return 读取到的 CompoundTag
      * @throws IOException 如果发生 I/O 错误, 或根标签不是 CompoundTag
      */
-    public static CompoundTag readCompound(DataInput input, boolean named) throws IOException {
+    public static @NotNull CompoundTag readCompound(@NotNull DataInput input, boolean named) throws IOException {
         Tag tag = readUnnamedTag(input, named);
         if (tag instanceof CompoundTag) {
             return (CompoundTag) tag;
@@ -145,7 +145,7 @@ public class NBT {
      * @param output 要写入的输出流
      * @throws IOException 如果发生 I/O 错误
      */
-    public static void writeCompound(CompoundTag nbt, DataOutput output, boolean named) throws IOException {
+    public static void writeCompound(@NotNull CompoundTag nbt, @NotNull DataOutput output, boolean named) throws IOException {
         writeUnnamedTag(nbt, output, named);
     }
 
@@ -156,8 +156,7 @@ public class NBT {
      * @return 读取到的 CompoundTag, 若文件不存在或为空则返回 null
      * @throws IOException 如果发生 I/O 错误
      */
-    @Nullable
-    public static CompoundTag readFile(File file) throws IOException {
+    public static @Nullable CompoundTag readFile(@NotNull File file) throws IOException {
         if (!file.exists()) {
             return null;
         }
@@ -177,7 +176,7 @@ public class NBT {
      * @param nbt  要写入的 CompoundTag
      * @throws IOException 如果发生 I/O 错误
      */
-    public static void writeFile(File file, CompoundTag nbt) throws IOException {
+    public static void writeFile(@NotNull File file, @NotNull CompoundTag nbt) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file);
              DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream)) {
             writeCompound(nbt, dataOutputStream, false);
@@ -191,8 +190,7 @@ public class NBT {
      * @return 对应的 CompoundTag, 若字节数组为 null 或为空则返回 null
      * @throws IOException 如果发生 I/O 错误
      */
-    @Nullable
-    public static CompoundTag fromBytes(byte[] bytes) throws IOException {
+    public static @Nullable CompoundTag fromBytes(byte[] bytes) throws IOException {
         if (bytes == null || bytes.length == 0) {
             return null;
         }

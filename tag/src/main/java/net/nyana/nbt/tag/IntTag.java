@@ -1,6 +1,6 @@
 package net.nyana.nbt.tag;
 
-import net.nyana.nbt.tag.visitor.TagVisitor;
+import net.nyana.nbt.tag.visitor.TagVisitor;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class IntTag extends NumericTag {
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         output.writeInt(this.value);
     }
 
@@ -28,12 +28,12 @@ public class IntTag extends NumericTag {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.INT;
     }
 
     @Override
-    public IntTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new IntTag(value);
     }
 
@@ -43,12 +43,12 @@ public class IntTag extends NumericTag {
     }
 
     @Override
-    public IntTag copy() {
+    public @NotNull Tag copy() {
         return this;
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitInt(this);
     }
 
@@ -83,7 +83,7 @@ public class IntTag extends NumericTag {
     }
 
     @Override
-    public Number getAsNumber() {
+    public @NotNull Number getAsNumber() {
         return value;
     }
 

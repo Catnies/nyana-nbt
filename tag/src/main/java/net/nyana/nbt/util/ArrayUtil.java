@@ -1,5 +1,8 @@
 package net.nyana.nbt.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Array;
 
 /**
@@ -19,7 +22,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static int[] add(int[] array, int index, int element) {
-        return (int[]) add(array, index, element, Integer.class);
+        return (int[]) ArrayUtil.add(array, index, element, Integer.class);
     }
 
     /**
@@ -32,7 +35,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static byte[] add(byte[] array, int index, byte element) {
-        return (byte[]) add(array, index, element, Byte.class);
+        return (byte[]) ArrayUtil.add(array, index, element, Byte.class);
     }
 
     /**
@@ -45,7 +48,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static long[] add(long[] array, int index, long element) {
-        return (long[]) add(array, index, element, Long.TYPE);
+        return (long[]) ArrayUtil.add(array, index, element, Long.TYPE);
     }
 
     /**
@@ -58,7 +61,7 @@ public final class ArrayUtil {
      * @return 包含新元素的新数组对象
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
-    private static Object add(Object array, int index, Object element, Class<?> clazz) {
+    private static @NotNull Object add(@Nullable Object array, int index, @Nullable Object element, Class<?> clazz) {
         if (array == null) {
             if (index != 0) {
                 throw new IndexOutOfBoundsException("Index: " + index + ", Length: 0");
@@ -92,7 +95,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static int[] remove(int[] array, int index) {
-        return (int[]) remove((Object) array, index);
+        return (int[]) ArrayUtil.remove((Object) array, index);
     }
 
     /**
@@ -104,7 +107,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static byte[] remove(byte[] array, int index) {
-        return (byte[]) remove((Object) array, index);
+        return (byte[]) ArrayUtil.remove((Object) array, index);
     }
 
     /**
@@ -116,7 +119,7 @@ public final class ArrayUtil {
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
     public static long[] remove(long[] array, int index) {
-        return (long[]) remove((Object) array, index);
+        return (long[]) ArrayUtil.remove((Object) array, index);
     }
 
     /**
@@ -127,9 +130,9 @@ public final class ArrayUtil {
      * @return 移除指定元素后的新数组对象
      * @throws IndexOutOfBoundsException 若 {@code index} 超出合法范围
      */
-    private static Object remove(Object array, int index) {
-        int length = getLength(array);
-        if (index >= 0 && index < length) {
+    private static @NotNull Object remove(@Nullable Object array, int index) {
+        int length = ArrayUtil.getLength(array);
+        if (array != null && index >= 0 && index < length) {
             Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
             System.arraycopy(array, 0, result, 0, index);
             if (index < length - 1) {
@@ -147,7 +150,7 @@ public final class ArrayUtil {
      * @param array 目标数组，可为 {@code null}
      * @return 数组长度，或 {@code 0}（当 {@code array} 为 {@code null} 时）
      */
-    public static int getLength(Object array) {
+    public static int getLength(@Nullable Object array) {
         return array == null ? 0 : Array.getLength(array);
     }
 }

@@ -1,5 +1,7 @@
 package net.nyana.nbt.tag;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class NumericTag implements Tag {
 
     protected NumericTag() {}
@@ -52,10 +54,10 @@ public abstract class NumericTag implements Tag {
      *
      * @return Number 类型的数值
      */
-    public abstract Number getAsNumber();
+    public abstract @NotNull Number getAsNumber();
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getAsString();
     }
 }

@@ -1,14 +1,14 @@
 package net.nyana.nbt.tag.visitor;
 
 
-import net.nyana.nbt.tag.*;
+import net.nyana.nbt.tag.*;import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class PrettyStringTagVisitor extends CompactStringTagVisitor {
 
     @Override
-    public void visitByteArray(ByteArrayTag element) {
+    public void visitByteArray(@NotNull ByteArrayTag element) {
         this.builder.append("[");
         byte[] array = element.getAsByteArray();
         StringJoiner joiner = new StringJoiner(", ");
@@ -20,7 +20,7 @@ public class PrettyStringTagVisitor extends CompactStringTagVisitor {
     }
 
     @Override
-    public void visitIntArray(IntArrayTag element) {
+    public void visitIntArray(@NotNull IntArrayTag element) {
         this.builder.append("[");
         int[] array = element.getAsIntArray();
         StringJoiner joiner = new StringJoiner(", ");
@@ -32,7 +32,7 @@ public class PrettyStringTagVisitor extends CompactStringTagVisitor {
     }
 
     @Override
-    public void visitLongArray(LongArrayTag element) {
+    public void visitLongArray(@NotNull LongArrayTag element) {
         this.builder.append("[");
         long[] array = element.getAsLongArray();
         StringJoiner joiner = new StringJoiner(", ");
@@ -44,7 +44,7 @@ public class PrettyStringTagVisitor extends CompactStringTagVisitor {
     }
 
     @Override
-    public void visitList(ListTag element) {
+    public void visitList(@NotNull ListTag element) {
         this.builder.append("[\r\n");
         StringJoiner joiner = new StringJoiner(",\r\n");
         for (Tag tag : element) {
@@ -55,7 +55,7 @@ public class PrettyStringTagVisitor extends CompactStringTagVisitor {
     }
 
     @Override
-    public void visitCompound(CompoundTag compound) {
+    public void visitCompound(@NotNull CompoundTag compound) {
         this.builder.append("{\r\n");
         List<String> list = new ArrayList<>(compound.keySet());
         Collections.sort(list);

@@ -1,5 +1,7 @@
 package net.nyana.nbt.tag;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractList;
 
 /**
@@ -19,7 +21,7 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      *         (index < 0 || index >= size())
      */
     @Override
-    public abstract T get(int index);
+    public abstract @NotNull T get(int index);
 
     /**
      * 将指定索引处的标签替换为给定的标签.
@@ -29,7 +31,7 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      * @return 之前位于指定索引处的标签
      */
     @Override
-    public abstract T set(int index, T tag);
+    public abstract @NotNull T set(int index, @NotNull T tag);
 
     /**
      * 在集合的指定索引处插入指定标签.
@@ -39,7 +41,7 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      * @param tag   要插入的标签
      */
     @Override
-    public abstract void add(int index, T tag);
+    public abstract void add(int index, @NotNull T tag);
 
     /**
      * 从集合中移除指定索引处的标签.
@@ -49,7 +51,7 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      * @return 从集合中移除的标签
      */
     @Override
-    public abstract T remove(int index);
+    public abstract @NotNull T remove(int index);
 
     /**
      * 将指定索引处的标签替换为给定的标签.
@@ -59,7 +61,7 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      * @param tag   要设置在指定索引处的新标签
      * @return 如果标签成功替换则返回 true, 否则返回 false
      */
-    public abstract boolean setTag(int index, Tag tag);
+    public abstract boolean setTag(int index, @NotNull Tag tag);
 
     /**
      * 在集合的指定索引处插入指定标签.
@@ -69,5 +71,5 @@ public abstract class CollectionTag<T extends Tag> extends AbstractList<T> imple
      * @param tag   要插入的标签
      * @return 如果标签成功添加则返回 true, 否则返回 false
      */
-    public abstract boolean addTag(int index, Tag tag);
+    public abstract boolean addTag(int index, @NotNull Tag tag);
 }

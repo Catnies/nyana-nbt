@@ -2,7 +2,7 @@ package net.nyana.nbt.tag;
 
 import net.nyana.nbt.tag.visitor.TagVisitor;
 import net.nyana.nbt.util.ArrayUtil;
-import net.nyana.nbt.util.UUIDUtil;
+import net.nyana.nbt.util.UUIDUtil;import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
         return data;
     }
 
-    public UUID getAsUUID() {
+    public @NotNull UUID getAsUUID() {
         if (this.data.length != 4) {
             throw new IllegalArgumentException("Failed to convert IntArray into UUID because the length of the array is " + data.length + " which is expected to be 4.");
         } else {
@@ -34,24 +34,24 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public IntTag get(int index) {
+    public @NotNull IntTag get(int index) {
         return new IntTag(this.data[index]);
     }
 
     @Override
-    public IntTag set(int index, IntTag tag) {
+    public @NotNull IntTag set(int index, @NotNull IntTag tag) {
         int j = this.data[index];
         this.data[index] = tag.getAsInt();
         return new IntTag(j);
     }
 
     @Override
-    public void add(int index, IntTag tag) {
+    public void add(int index, @NotNull IntTag tag) {
         this.data = ArrayUtil.add(this.data, index, tag.getAsInt());
     }
 
     @Override
-    public IntTag remove(int index) {
+    public @NotNull IntTag remove(int index) {
         int j = this.data[index];
         this.data = ArrayUtil.remove(this.data, index);
         return new IntTag(j);
@@ -68,7 +68,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public boolean setTag(int index, Tag tag) {
+    public boolean setTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data[index] = ((NumericTag) tag).getAsInt();
             return true;
@@ -78,7 +78,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public boolean addTag(int index, Tag tag) {
+    public boolean addTag(int index, @NotNull Tag tag) {
         if (tag instanceof NumericTag) {
             this.data = ArrayUtil.add(this.data, index, ((NumericTag) tag).getAsInt());
             return true;
@@ -93,7 +93,7 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public void write(DataOutput output) throws IOException {
+    public void write(@NotNull DataOutput output) throws IOException {
         output.writeInt(this.data.length);
         for (int k : this.data) {
             output.writeInt(k);
@@ -106,12 +106,12 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public TagType<?> getType() {
+    public @NotNull TagType<?> getType() {
         return TagTypes.INT;
     }
 
     @Override
-    public IntArrayTag deepClone() {
+    public @NotNull Tag deepClone() {
         return new IntArrayTag(this.data.clone());
     }
 
@@ -121,17 +121,17 @@ public class IntArrayTag extends CollectionTag<IntTag> {
     }
 
     @Override
-    public IntArrayTag copy() {
+    public @NotNull Tag copy() {
         return deepClone();
     }
 
     @Override
-    public void accept(TagVisitor visitor) {
+    public void accept(@NotNull TagVisitor visitor) {
         visitor.visitIntArray(this);
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getAsString();
     }
 

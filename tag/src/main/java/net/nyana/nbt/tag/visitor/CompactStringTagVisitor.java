@@ -1,6 +1,7 @@
 package net.nyana.nbt.tag.visitor;
 
 import net.nyana.nbt.tag.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,42 +19,42 @@ public class CompactStringTagVisitor implements TagVisitor {
     }
 
     @Override
-    public void visitByte(ByteTag element) {
+    public void visitByte(@NotNull ByteTag element) {
         this.builder.append(element.getAsNumber()).append('b');
     }
 
     @Override
-    public void visitShort(ShortTag element) {
+    public void visitShort(@NotNull ShortTag element) {
         this.builder.append(element.getAsNumber()).append('s');
     }
 
     @Override
-    public void visitInt(IntTag element) {
+    public void visitInt(@NotNull IntTag element) {
         this.builder.append(element.getAsNumber());
     }
 
     @Override
-    public void visitLong(LongTag element) {
+    public void visitLong(@NotNull LongTag element) {
         this.builder.append(element.getAsNumber()).append('L');
     }
 
     @Override
-    public void visitFloat(FloatTag element) {
+    public void visitFloat(@NotNull FloatTag element) {
         this.builder.append(element.getAsFloat()).append('f');
     }
 
     @Override
-    public void visitDouble(DoubleTag element) {
+    public void visitDouble(@NotNull DoubleTag element) {
         this.builder.append(element.getAsDouble()).append('d');
     }
 
     @Override
-    public void visitString(StringTag element) {
+    public void visitString(@NotNull StringTag element) {
         this.builder.append(StringTag.quoteAndEscape(element.getAsString()));
     }
 
     @Override
-    public void visitByteArray(ByteArrayTag element) {
+    public void visitByteArray(@NotNull ByteArrayTag element) {
         this.builder.append("[B;");
         byte[] array = element.getAsByteArray();
         for(int i = 0; i < array.length; ++i) {
@@ -66,7 +67,7 @@ public class CompactStringTagVisitor implements TagVisitor {
     }
 
     @Override
-    public void visitIntArray(IntArrayTag element) {
+    public void visitIntArray(@NotNull IntArrayTag element) {
         this.builder.append("[I;");
         int[] array = element.getAsIntArray();
         for(int i = 0; i < array.length; ++i) {
@@ -79,7 +80,7 @@ public class CompactStringTagVisitor implements TagVisitor {
     }
 
     @Override
-    public void visitLongArray(LongArrayTag element) {
+    public void visitLongArray(@NotNull LongArrayTag element) {
         this.builder.append("[L;");
         long[] array = element.getAsLongArray();
         for(int i = 0; i < array.length; ++i) {
@@ -92,7 +93,7 @@ public class CompactStringTagVisitor implements TagVisitor {
     }
 
     @Override
-    public void visitList(ListTag element) {
+    public void visitList(@NotNull ListTag element) {
         this.builder.append('[');
         for(int i = 0; i < element.size(); ++i) {
             if (i != 0) {
@@ -104,7 +105,7 @@ public class CompactStringTagVisitor implements TagVisitor {
     }
 
     @Override
-    public void visitCompound(CompoundTag compound) {
+    public void visitCompound(@NotNull CompoundTag compound) {
         this.builder.append('{');
         List<String> list = new ArrayList<>(compound.keySet());
         Collections.sort(list);
@@ -112,17 +113,17 @@ public class CompactStringTagVisitor implements TagVisitor {
             if (this.builder.length() != 1) {
                 this.builder.append(',');
             }
-            this.builder.append(handleEscape(string)).append(':').append((new CompactStringTagVisitor()).visit(Objects.requireNonNull(compound.get(string))));
+            this.builder.append(CompactStringTagVisitor.handleEscape(string)).append(':').append((new CompactStringTagVisitor()).visit(Objects.requireNonNull(compound.get(string))));
         }
         this.builder.append('}');
     }
 
-    protected static String handleEscape(String name) {
-        return SIMPLE_VALUE.matcher(name).matches() ? name : StringTag.quoteAndEscape(name);
+    protected static @NotNull String handleEscape(@NotNull String name) {
+        return CompactStringTagVisitor.SIMPLE_VALUE.matcher(name).matches() ? name : StringTag.quoteAndEscape(name);
     }
 
     @Override
-    public void visitEnd(EndTag element) {
+    public void visitEnd(@NotNull EndTag element) {
         this.builder.append("END");
     }
 }
