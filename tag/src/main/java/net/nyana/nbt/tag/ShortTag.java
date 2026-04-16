@@ -1,6 +1,7 @@
 package net.nyana.nbt.tag;
 
-import net.nyana.nbt.tag.visitor.TagVisitor;import org.jetbrains.annotations.NotNull;
+import net.nyana.nbt.tag.visitor.TagVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;

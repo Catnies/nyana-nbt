@@ -1,7 +1,8 @@
 package net.nyana.nbt.tag.visitor;
 
 
-import net.nyana.nbt.tag.*;import org.jetbrains.annotations.NotNull;
+import net.nyana.nbt.tag.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

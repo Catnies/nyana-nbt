@@ -1,6 +1,8 @@
 package net.nyana.nbt.tag;
 
-import org.jetbrains.annotations.NotNull;import java.io.DataInput;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.DataInput;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
