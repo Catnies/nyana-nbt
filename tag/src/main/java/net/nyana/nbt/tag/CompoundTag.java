@@ -142,16 +142,6 @@ public class CompoundTag implements Tag {
     }
 
     /**
-     * 向复合标签中添加指定键关联的 byte 值.
-     *
-     * @param key   与 byte 值关联的键
-     * @param value 要存储的 byte 值
-     */
-    public void putByte(@NotNull String key, byte value) {
-        this.tags.put(key, new ByteTag(value));
-    }
-
-    /**
      * 向复合标签中添加指定键关联的 boolean 值.
      * boolean 值以 ByteTag 存储 (true 为 1, false 为 0).
      *
@@ -162,103 +152,46 @@ public class CompoundTag implements Tag {
         this.tags.put(key, new ByteTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 short 值.
-     *
-     * @param key   与 short 值关联的键
-     * @param value 要存储的 short 值
-     */
+    public void putByte(@NotNull String key, byte value) {
+        this.tags.put(key, new ByteTag(value));
+    }
+
     public void putShort(@NotNull String key, short value) {
         this.tags.put(key, new ShortTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 int 值.
-     *
-     * @param key   与 int 值关联的键
-     * @param value 要存储的 int 值
-     */
     public void putInt(@NotNull String key, int value) {
         this.tags.put(key, new IntTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 long 值.
-     *
-     * @param key   与 long 值关联的键
-     * @param value 要存储的 long 值
-     */
     public void putLong(@NotNull String key, long value) {
         this.tags.put(key, new LongTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 float 值.
-     *
-     * @param key   与 float 值关联的键
-     * @param value 要存储的 float 值
-     */
     public void putFloat(@NotNull String key, float value) {
         this.tags.put(key, new FloatTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 double 值.
-     *
-     * @param key   与 double 值关联的键
-     * @param value 要存储的 double 值
-     */
     public void putDouble(@NotNull String key, double value) {
         this.tags.put(key, new DoubleTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的字符串值.
-     *
-     * @param key   与字符串值关联的键
-     * @param value 要存储的字符串值
-     */
     public void putString(@NotNull String key, @NotNull String value) {
         this.tags.put(key, new StringTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 byte 数组.
-     *
-     * @param key   与 byte 数组关联的键
-     * @param value 要存储的 byte 数组
-     */
     public void putByteArray(@NotNull String key, byte @NotNull [] value) {
         this.tags.put(key, new ByteArrayTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 long 数组.
-     *
-     * @param key   与 long 数组关联的键
-     * @param value 要存储的 long 数组
-     */
     public void putLongArray(@NotNull String key, long @NotNull [] value) {
         this.tags.put(key, new LongArrayTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 int 数组.
-     *
-     * @param key   与 int 数组关联的键
-     * @param value 要存储的 int 数组
-     */
     public void putIntArray(@NotNull String key, int @NotNull [] value) {
         this.tags.put(key, new IntArrayTag(value));
     }
 
-    /**
-     * 向复合标签中添加指定键关联的 UUID 值.
-     * UUID 在存储前会被转换为 IntArrayTag.
-     *
-     * @param key   与 UUID 关联的键
-     * @param value 要存储的 UUID 值
-     */
     public void putUUID(@NotNull String key, @NotNull UUID value) {
         this.tags.put(key, NBT.createUUID(value));
     }
@@ -296,48 +229,20 @@ public class CompoundTag implements Tag {
         return getByte(key, (byte) (defaultValue ? 1 : 0)) != 0;
     }
 
-    /**
-     * 获取与指定键关联的 byte 值.
-     * 若键不存在或类型不兼容, 默认返回 0.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 byte 值
-     */
     public byte getByte(@NotNull String key) {
         return getByte(key, (byte) 0);
     }
 
-    /**
-     * 获取与指定键关联的 byte 值, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在时返回的默认值
-     * @return 与该键关联的 byte 值, 或默认值
-     */
     public byte getByte(@NotNull String key, byte defaultValue) {
         Byte value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsByte(), defaultValue);
         assert value != null;
         return value;
     }
 
-    /**
-     * 获取与指定键关联的 short 值.
-     * 若键不存在或类型不兼容, 默认返回 0.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 short 值
-     */
     public short getShort(@NotNull String key) {
         return getShort(key, (short) 0);
     }
 
-    /**
-     * 获取与指定键关联的 short 值, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在时返回的默认值
-     * @return 与该键关联的 short 值, 或默认值
-     */
     public short getShort(@NotNull String key, short defaultValue) {
         Short value = getOrDefault(key, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsShort(), defaultValue);
         assert value != null;
@@ -384,166 +289,244 @@ public class CompoundTag implements Tag {
         return value;
     }
 
-    /**
-     * 获取与指定键关联的字符串值.
-     * 若键不存在或类型不兼容, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的字符串值, 若不存在则返回 null
-     */
-    public @Nullable String getString(@NotNull  String key) {
+    public @Nullable String getString(@NotNull String key) {
         return getString(key, null);
     }
 
-    /**
-     * 获取与指定键关联的字符串值, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在时返回的默认值
-     * @return 与该键关联的字符串值, 或默认值
-     */
     public @Nullable String getString(@NotNull String key, @Nullable String defaultValue) {
         return getOrDefault(key, TAG_STRING, Tag::getAsString, defaultValue);
     }
 
-    /**
-     * 获取与指定键关联的 byte 数组.
-     * 若键不存在或类型不兼容, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 byte 数组, 若不存在则返回 null
-     */
     public byte @Nullable[] getByteArray(@NotNull String key) {
         return getByteArray(key, null);
     }
 
-    /**
-     * 获取与指定键关联的 byte 数组, 支持指定默认值.
-     * byte 数组预期以 ByteArrayTag 形式存储在复合标签中.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不兼容时返回的默认值
-     * @return 与该键关联的 byte 数组, 或默认值
-     */
     public byte @Nullable [] getByteArray(@NotNull String key, byte @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_BYTE_ARRAY, t -> ((ByteArrayTag) t).getAsByteArray(), defaultValue);
     }
 
-    /**
-     * 获取与指定键关联的 int 数组.
-     * 若键不存在或类型不兼容, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 int 数组, 若不存在则返回 null
-     */
     public int @Nullable [] getIntArray(@NotNull String key) {
         return getIntArray(key, null);
     }
 
-    /**
-     * 获取与指定键关联的 int 数组, 支持指定默认值.
-     * int 数组预期以 IntArrayTag 形式存储在复合标签中.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不兼容时返回的默认值
-     * @return 与该键关联的 int 数组, 或默认值
-     */
     public int @Nullable [] getIntArray(@NotNull String key, int @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsIntArray(), defaultValue);
     }
 
-    /**
-     * 获取与指定键关联的 UUID.
-     * 若键不存在或类型不兼容, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 UUID, 若不存在则返回 null
-     */
-    public @Nullable UUID getUUID(@NotNull String key) {
-        return getUUID(key, null);
-    }
-
-    /**
-     * 获取与指定键关联的 UUID, 支持指定默认值.
-     * UUID 预期以 IntArrayTag 形式存储在复合标签中.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不兼容时返回的默认值
-     * @return 与该键关联的 UUID, 或默认值
-     */
-    public @Nullable UUID getUUID(@NotNull String key, @Nullable UUID defaultValue) {
-        return getOrDefault(key, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsUUID(), defaultValue);
-    }
-
-    /**
-     * 获取与指定键关联的 long 数组.
-     * 若键不存在或类型不兼容, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 long 数组, 若不存在则返回 null
-     */
     public long @Nullable [] getLongArray(@NotNull String key) {
         return getLongArray(key, null);
     }
 
-    /**
-     * 获取与指定键关联的 long 数组, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不兼容时返回的默认值
-     * @return 与该键关联的 long 数组, 或默认值
-     */
     public long @Nullable [] getLongArray(@NotNull String key, long @Nullable [] defaultValue) {
         return getOrDefault(key, TAG_LONG_ARRAY, t -> ((LongArrayTag) t).getAsLongArray(), defaultValue);
     }
 
-    /**
-     * 获取与指定键关联的 CompoundTag.
-     * 若键不存在或类型不匹配, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 CompoundTag, 若不存在则返回 null
-     */
+    public @Nullable UUID getUUID(@NotNull String key) {
+        return getUUID(key, null);
+    }
+
+    public @Nullable UUID getUUID(@NotNull String key, @Nullable UUID defaultValue) {
+        return getOrDefault(key, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsUUID(), defaultValue);
+    }
+
     public @Nullable CompoundTag getCompound(@NotNull String key) {
         return getCompound(key, null);
     }
 
-    /**
-     * 获取与指定键关联的 CompoundTag, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不匹配时返回的默认值
-     * @return 与该键关联的 CompoundTag, 或默认值
-     */
     public @Nullable CompoundTag getCompound(@NotNull String key, @Nullable CompoundTag defaultValue) {
         return getOrDefault(key, TAG_COMPOUND, t -> (CompoundTag) t, defaultValue);
     }
 
-    /**
-     * 获取与指定键关联的 ListTag.
-     * 若键不存在或类型不匹配, 返回 null.
-     *
-     * @param key 要查找的键
-     * @return 与该键关联的 ListTag, 若不存在则返回 null
-     */
     public @Nullable ListTag getList(@NotNull String key) {
         return getList(key, null);
     }
 
-    /**
-     * 获取与指定键关联的 ListTag, 支持指定默认值.
-     *
-     * @param key          要查找的键
-     * @param defaultValue 若键不存在或类型不匹配时返回的默认值
-     * @return 与该键关联的 ListTag, 或默认值
-     */
     public @Nullable ListTag getList(@NotNull String key, @Nullable ListTag defaultValue) {
         return getOrDefault(key, TAG_LIST, t -> (ListTag) t, defaultValue);
     }
 
+    /**
+     * 根据一段 Keys 获取 boolean 值.
+     * 若中途键不存在或类型不兼容, 默认返回 false.
+     *
+     * @param keys 目标键数组
+     * @return 与该键关联的 boolean 值
+     */
+    public boolean getBoolean(@NotNull String[] keys) {
+        return getBoolean(keys, false);
+    }
+
+    /**
+     * 根据一段 Keys 获取 boolean 值, 支持指定默认值.
+     *
+     * @param keys         目标键数组
+     * @param defaultValue 若中途键不存在或类型不兼容时返回的默认值
+     * @return 与该键关联的 boolean 值, 或默认值
+     */
+    public boolean getBoolean(@NotNull String[] keys, boolean defaultValue) {
+        return getByte(keys, (byte) (defaultValue ? 1 : 0)) != 0;
+    }
+
+    public byte getByte(@NotNull String[] keys) {
+        return getByte(keys, (byte) 0);
+    }
+
+    public byte getByte(@NotNull String[] keys, byte defaultValue) {
+        Byte value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsByte(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public short getShort(@NotNull String[] keys) {
+        return getShort(keys, (short) 0);
+    }
+
+    public short getShort(@NotNull String[] keys, short defaultValue) {
+        Short value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsShort(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public int getInt(@NotNull String[] keys) {
+        return getInt(keys, 0);
+    }
+
+    public int getInt(@NotNull String[] keys, int defaultValue) {
+        Integer value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsInt(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public long getLong(@NotNull String[] keys) {
+        return getLong(keys, 0L);
+    }
+
+    public long getLong(@NotNull String[] keys, long defaultValue) {
+        Long value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsLong(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public float getFloat(@NotNull String[] keys) {
+        return getFloat(keys, 0f);
+    }
+
+    public float getFloat(@NotNull String[] keys, float defaultValue) {
+        Float value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsFloat(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public double getDouble(@NotNull String[] keys) {
+        return getDouble(keys, 0d);
+    }
+
+    public double getDouble(@NotNull String[] keys, double defaultValue) {
+        Double value = getOrDefault(keys, TAG_ANY_NUMERIC, t -> ((NumericTag) t).getAsDouble(), defaultValue);
+        assert value != null;
+        return value;
+    }
+
+    public @Nullable String getString(@NotNull String[] keys) {
+        return getString(keys, null);
+    }
+
+    public @Nullable String getString(@NotNull String[] keys, @Nullable String defaultValue) {
+        return getOrDefault(keys, TAG_STRING, Tag::getAsString, defaultValue);
+    }
+
+    public byte @Nullable[] getByteArray(@NotNull String[] keys) {
+        return getByteArray(keys, null);
+    }
+
+    public byte @Nullable [] getByteArray(@NotNull String[] keys, byte @Nullable [] defaultValue) {
+        return getOrDefault(keys, TAG_BYTE_ARRAY, t -> ((ByteArrayTag) t).getAsByteArray(), defaultValue);
+    }
+
+    public int @Nullable [] getIntArray(@NotNull String[] keys) {
+        return getIntArray(keys, null);
+    }
+
+    public int @Nullable [] getIntArray(@NotNull String[] keys, int @Nullable [] defaultValue) {
+        return getOrDefault(keys, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsIntArray(), defaultValue);
+    }
+
+    public long @Nullable [] getLongArray(@NotNull String[] keys) {
+        return getLongArray(keys, null);
+    }
+
+    public long @Nullable [] getLongArray(@NotNull String[] keys, long @Nullable [] defaultValue) {
+        return getOrDefault(keys, TAG_LONG_ARRAY, t -> ((LongArrayTag) t).getAsLongArray(), defaultValue);
+    }
+
+    public @Nullable UUID getUUID(@NotNull String[] keys) {
+        return getUUID(keys, null);
+    }
+
+    public @Nullable UUID getUUID(@NotNull String[] keys, @Nullable UUID defaultValue) {
+        return getOrDefault(keys, TAG_INT_ARRAY, t -> ((IntArrayTag) t).getAsUUID(), defaultValue);
+    }
+
+    public @Nullable CompoundTag getCompound(@NotNull String[] keys) {
+        return getCompound(keys, null);
+    }
+
+    public @Nullable CompoundTag getCompound(@NotNull String[] keys, @Nullable CompoundTag defaultValue) {
+        return getOrDefault(keys, TAG_COMPOUND, t -> (CompoundTag) t, defaultValue);
+    }
+
+    public @Nullable ListTag getList(@NotNull String[] keys) {
+        return getList(keys, null);
+    }
+
+    public @Nullable ListTag getList(@NotNull String[] keys, @Nullable ListTag defaultValue) {
+        return getOrDefault(keys, TAG_LIST, t -> (ListTag) t, defaultValue);
+    }
+
+    /**
+     * 根据 Key 获取值, 若键不存在或类型不兼容, 默认返回 defaultValue.
+     *
+     * @param key 目标键
+     * @param expectedType 目标键类型
+     * @param extractor 提取器
+     * @param defaultValue 默认值
+     * @return 与该键关联的值
+     */
     private <T> @Nullable T getOrDefault(@NotNull String key, int expectedType, @NotNull Function<Tag, T> extractor, @Nullable T defaultValue) {
         Tag tag = tags.get(key);
         return tag != null && tag.isTypeOf(expectedType) ? extractor.apply(tag) : defaultValue;
+    }
+
+    /**
+     * 根据一段 Keys 获取值, 若中途键不存在或类型不兼容, 默认返回 defaultValue.
+     *
+     * @param keys 目标键
+     * @param expectedType 目标键类型
+     * @param extractor 提取器
+     * @param defaultValue 默认值
+     * @return 与该键关联的值
+     */
+    private <T> @Nullable T getOrDefault(@NotNull String[] keys, int expectedType, @NotNull Function<Tag, T> extractor, @Nullable T defaultValue) {
+        if (keys == null || keys.length == 0) {
+            return defaultValue;
+        }
+
+        CompoundTag current = this;
+        for (int i = 0; i < keys.length - 1; i++) {
+            Tag next = current.get(keys[i]);
+            if (next instanceof CompoundTag childCompound) {
+                current = childCompound;
+            } else {
+                return defaultValue;
+            }
+        }
+
+        Tag resultTag = current.get(keys[keys.length - 1]);
+        if (resultTag != null && resultTag.isTypeOf(expectedType)) {
+            return extractor.apply(resultTag);
+        } else {
+            return defaultValue;
+        }
     }
 
     public byte getTagType(@NotNull String key) {
