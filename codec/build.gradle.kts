@@ -23,7 +23,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "net.nyana"
-            artifactId = "nayana-nbt-codec"
+            artifactId = "nyana-nbt-codec"
             version = version
             from(components["java"])
             pom {

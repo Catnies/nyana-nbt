@@ -11,7 +11,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "net.nyana"
-            artifactId = "nayana-nbt-tag"
+            artifactId = "nyana-nbt-tag"
             version = version
             from(components["java"])
             pom {
