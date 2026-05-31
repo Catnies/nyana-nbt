@@ -28,14 +28,6 @@ dependencies {
     implementation("net.nyana:nyana-nbt-codec:0.15")
 }
 ```
-
-源码发布配置里 artifactId 是：
-
-```kotlin
-implementation("net.nyana:nayana-nbt-tag:1.0.0")
-implementation("net.nyana:nayana-nbt-codec:1.0.0")
-```
-
 实际开发时先用 Gradle 刷新依赖验证哪个坐标可解析；如果项目已有私服镜像，也检查 `https://repo.catnies.top/releases/` 中的实际 artifact 名。
 
 ## 常用写法
