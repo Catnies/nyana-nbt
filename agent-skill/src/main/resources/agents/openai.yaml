@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nyana NBT"
+  short_description: "Nyana NBT 字节序列化与标签读写完整使用指南"
+  default_prompt: "Use $nyana-nbt to read and write NBT byte data with Nyana NBT."
